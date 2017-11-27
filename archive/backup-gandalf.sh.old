@@ -1,0 +1,10 @@
+#!/bin/bash
+# backupscript: v4
+
+HOST="gandalf.mrwire.co.uk"
+DATE="`date +%Y-%m-%d`"
+ssh root@$HOST bash -c "'
+cd /tmp
+apt-get clean
+tar -cpzf --one-file-system - / | ssh mjw-backup@omv \"cat - > /media/datastore/backup/system/\"$HOST\"_\"$DATE\"-rootdisk.tar.gz\"
+'"
