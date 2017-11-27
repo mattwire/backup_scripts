@@ -36,6 +36,8 @@ if [ ! -f /opt/s3cmd/s3cmd ]; then
   echo ""
 fi
 
+# apt-get install python-dateutil
+
 # Do the following setup
 # Create the new database user, "backup".
 # "{PASSWORD}" should be replaced w/ something secure!

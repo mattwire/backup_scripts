@@ -12,7 +12,7 @@ fi
 
 . "$CONF"
 
-if [ ! $BACKUP_S3 ]; then
+if [ "$BACKUP_S3" -ne 1 ]; then
   exit 0
 fi
 

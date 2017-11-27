@@ -12,7 +12,7 @@ fi
 
 . "$CONF"
 
-if [ ! $BACKUP_MYSQL ]; then
+if [ "$BACKUP_MYSQL" -ne 1 ]; then
   exit 0
 fi
 

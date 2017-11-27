@@ -22,7 +22,7 @@ fi
 
 . "$CONF"
 
-if [ ! $ROTATE_S3 ]; then
+if [ "$ROTATE_S3" -ne 1 ]; then
   exit 0
 fi
 

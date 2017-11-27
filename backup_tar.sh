@@ -16,7 +16,7 @@ fi
 
 . "$CONF"
 
-if [ ! $BACKUP_TAR ]; then
+if [ "$BACKUP_TAR" -ne 1 ]; then
   exit 0
 fi
 
