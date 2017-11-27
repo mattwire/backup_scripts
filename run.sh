@@ -12,7 +12,9 @@ fi
 . "$CONF"
 
 # Cleanup before we start
-if [ ! -z "$STAGING_DIR" ] && [ -d "$STAGING_DIR" ] && [ ! "$STAGING_DIR" == "/" ]; then
+if [ ! -d "$STAGING_DIR" ]; then
+  mkdir -p "$STAGING_DIR"
+elif [ ! -z "$STAGING_DIR" ] && [ -d "$STAGING_DIR" ] && [ ! "$STAGING_DIR" == "/" ]; then
   `rm -rf "$STAGING_DIR"/*`
 fi
 # Backup files/dirs
