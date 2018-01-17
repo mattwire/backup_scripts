@@ -9,8 +9,6 @@
 #   EXISTING_BACKUPS: List of backups available on S3
 #   KEEP_BACKUPS: List of backup dates we should keep
 
-# FIXME: Currently this script is in readonly mode
-
 # Setup
 CONF_DIR="/etc/backup"
 CONF="$CONF_DIR/backup.cfg"
@@ -31,6 +29,7 @@ function rotate() {
   S3CMDLS="$S3 $S3_EXTRA_ARGS $S3_ACCESS ls $AWS_TARGET"
   S3CMDDEL="$S3 $S3_EXTRA_ARGS $S3_ACCESS --recursive --quiet del $AWS_TARGET"
 
+  EXISTING_BACKUPS=""
   # Loop through each object from S3 and get list of EXISTING_BACKUPS
   while read -r line; do
     IFS=' ' read -r -a object <<< "$line"
@@ -43,6 +42,13 @@ function rotate() {
       fi
     fi
   done < <($S3CMDLS)
+
+  # Check we have enough old backups
+  EXISTING_COUNT=`echo "$EXISTING_BACKUPS" | wc -w`
+  if [ $KEEP_MIN -gt $EXISTING_COUNT ]; then
+    echo "Not enough backups to start rotating ($KEEP_MIN required, we have $EXISTING_COUNT)"
+    return
+  fi
 
   # Loop through EXISTING_BACKUPS and check for match in KEEP_BACKUPS
   # If we match, keep it, if not delete it.
@@ -71,19 +77,21 @@ if [ -z $KEEP_DAILY ]; then
 fi
 if [ -z $KEEP_WEEKLY ]; then
   echo ""
-  echo "Error: You must specify KEEP_DAILY in the config file"
+  echo "Error: You must specify KEEP_WEEKLY in the config file"
   echo ""
 fi
 if [ -z $KEEP_MONTHLY ]; then
   echo ""
-  echo "Error: You must specify KEEP_DAILY in the config file"
+  echo "Error: You must specify KEEP_MONTHLY in the config file"
   echo ""
 fi
 if [ -z $KEEP_YEARLY ]; then
   echo ""
-  echo "Error: You must specify KEEP_DAILY in the config file"
+  echo "Error: You must specify KEEP_YEARLY in the config file"
   echo ""
 fi
+
+KEEP_MIN=$((KEEP_DAILY + KEEP_WEEKLY + KEEP_MONTHLY + KEEP_YEARLY))
 
 # Generate KEEP_BACKUPS list (dates we should keep)
 date=`date +%Y-%m-%d`
