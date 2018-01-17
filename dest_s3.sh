@@ -17,9 +17,15 @@ if [ "$BACKUP_S3" -ne 1 ]; then
 fi
 
 S3="/opt/s3cmd/s3cmd"
-S3_EXTRA_ARGS="--storage-class=STANDARD_IA --ssl --quiet"
+S3_STORAGE="--storage-class=STANDARD_IA"
+S3_PUT_ARGS="--ssl --quiet"
+S3_SYNC_ARGS="--ssl --recursive -v"
 S3_ACCESS="--access_key=$AWS_ACCESS_KEY --secret_key=$AWS_SECRET_KEY"
 DATE="`date +%Y-%m-%d`"
-S3CMD="$S3 $S3_EXTRA_ARGS $S3_ACCESS put $STAGING_DIR/* $AWS_TARGET/$DATE/"
+if [ $S3_SYNC_MODE -eq 1 ]; then
+  S3CMD="$S3 $S3_STORAGE $S3_SYNC_ARGS $S3_ACCESS sync $STAGING_DIR/ $AWS_TARGET/"
+else
+  S3CMD="$S3 $S3_STORAGE $S3_PUT_ARGS $S3_ACCESS put $STAGING_DIR/* $AWS_TARGET/$DATE/"
+fi
 
 $S3CMD
