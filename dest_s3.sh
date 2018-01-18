@@ -22,7 +22,7 @@ fi
 
 S3_STORAGE="--storage-class=STANDARD_IA"
 S3_PUT_ARGS="--ssl --quiet"
-S3_SYNC_ARGS="--ssl --recursive --skip-existing -v"
+S3_SYNC_ARGS="--ssl --recursive --skip-existing --no-delete-removed -v"
 S3_ACCESS="--access_key=$AWS_ACCESS_KEY --secret_key=$AWS_SECRET_KEY"
 DATE="`date +%Y-%m-%d`"
 if [ $S3_SYNC_MODE -eq 1 ]; then

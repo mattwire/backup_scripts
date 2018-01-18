@@ -62,13 +62,31 @@ if [ ! -z $TAR_EXCLUDE ]; then
   fi
   if [ ! -f $TAR_EXCLUDE ]; then
     echo -e ""
-    echo -e "Error: Could not file an exclude file ($TAR_INCLUDE)"
+    echo -e "Error: Could not file an exclude file ($TAR_EXCLUDE)"
     echo -e ""
     exit 1;
   fi
-  TAR_EXTRA_ARGS="-X $TAR_EXCLUDE $TAR_EXTRA_ARGS"
+
+  excludes=()    # start with an empty array
+  for excl in `/bin/cat $TAR_EXCLUDE`; do    # for each extra argument...
+    eval excludepath="$excl"
+    wcount=`echo ${excludepath} | wc -w`
+    if [ $wcount -gt 1 ]; then
+      # eval expands wildcards into multiple separate files.
+      # This adds each of those as a separate exclude
+      for excl2 in $excludepath; do
+        excludes+=(--exclude "$excl2")
+      done
+    else
+      # No wildcards were expanded, just add one exclude
+      excludes+=(--exclude "$excludepath")    # add an exclude to the array
+    fi
+  done
+
+  TAR_EXCLUDES="${excludes[@]}"
+  TAR_EXTRA_ARGS="$TAR_EXTRA_ARGS"
 fi
 
-TAR_CMD="tar -cpzhf $STAGING_DIR/$TAR_NAME $TAR_EXTRA_ARGS"
+TAR_CMD="tar -cpzhf $STAGING_DIR/$TAR_NAME $TAR_EXCLUDES $TAR_EXTRA_ARGS"
 
 $TAR_CMD 2> /dev/null

@@ -32,21 +32,20 @@ function rotate() {
   echo "Rotating: $AWS_TARGET"
   S3CMDLS="$PATH_S3CMD $S3_EXTRA_ARGS $S3_ACCESS ls $AWS_TARGET"
   S3CMDDEL="$PATH_S3CMD $S3_EXTRA_ARGS $S3_ACCESS --recursive --quiet del $AWS_TARGET"
-
   EXISTING_BACKUPS=""
   # Loop through each object from S3 and get list of EXISTING_BACKUPS
-  while read -r line; do
-    IFS=' ' read -r -a object <<< "$line"
-
+  S3OBJECTS=`$S3CMDLS`
+  DIROBJECT=0
+  for object in $S3OBJECTS; do
     # Only act on DIR objects
-    if [ "${object[0]}" == "DIR" ]; then
-      IFS='/' read -r -a s3path <<< "${object[1]}"
+    if [ $DIROBJECT -eq 1 ]; then
+      IFS='/' read -r -a s3path <<< "${object}"
       if [[ "${s3path[3]}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] && date -d "${s3path[3]}" >/dev/null 2>&1; then
         EXISTING_BACKUPS="$EXISTING_BACKUPS ${s3path[3]}"
       fi
     fi
-  done < <($S3CMDLS)
-
+    if [ "$object" == "DIR" ]; then DIROBJECT=1; else DIROBJECT=0; fi
+  done
   # Check we have enough old backups
   EXISTING_COUNT=`echo "$EXISTING_BACKUPS" | wc -w`
   if [ $KEEP_MIN -gt $EXISTING_COUNT ]; then

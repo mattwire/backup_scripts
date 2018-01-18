@@ -1,0 +1,8 @@
+~/backup-*.tar.gz
+~/backup
+~/application_backups
+~/cache
+~/logs
+~/softaculous_backups
+~/tmp
+~/.cagefs
