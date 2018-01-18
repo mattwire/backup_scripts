@@ -29,4 +29,4 @@ $SCRIPTS_DIR/backup_mysql.sh
 $SCRIPTS_DIR/dest_s3.sh
 
 # Rotate backups (for this hosts bucket)
-$SCRIPTS_DIR/rotate_s3.sh $AWS_TARGETS
+$SCRIPTS_DIR/rotate_s3.sh "${CONF_DIR}/buckets.rotate"
