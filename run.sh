@@ -22,7 +22,7 @@ elif [ ! -z "$STAGING_DIR" ] && [ -d "$STAGING_DIR" ] && [ ! "$STAGING_DIR" == "
   `rm -rf "$STAGING_DIR"/*`
 fi
 # Backup files/dirs
-$SCRIPTS_DIR/backup_tar.sh `hostname` tar.include tar.exclude
+$SCRIPTS_DIR/backup_tar.sh ${HOSTNAME} tar.include tar.exclude
 # Backup all mysql databases
 $SCRIPTS_DIR/backup_mysql.sh
 # Save to S3
