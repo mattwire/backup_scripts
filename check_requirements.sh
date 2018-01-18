@@ -12,12 +12,16 @@ function check() {
 }
 
 # Setup
-CONF_DIR="/etc/backup"
+CONF_DIR="${HOME}/.mjwbackup"
 CONF="$CONF_DIR/backup.cfg"
 
 if [ ! -f "$CONF" ]; then
-  echo "No config found in $CONF. Exiting"
-  exit 1
+  CONF_DIR="/etc/backup"
+  CONF="$CONF_DIR/backup.cfg"
+  if [ ! -f "$CONF" ]; then
+    echo "No config found in $CONF. Exiting"
+    exit 1
+  fi
 fi
 
 . "$CONF"
