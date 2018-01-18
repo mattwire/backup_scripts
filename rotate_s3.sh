@@ -30,8 +30,8 @@ fi
 
 function rotate() {
   echo "Rotating: $AWS_TARGET"
-  S3CMDLS="$S3 $S3_EXTRA_ARGS $S3_ACCESS ls $AWS_TARGET"
-  S3CMDDEL="$S3 $S3_EXTRA_ARGS $S3_ACCESS --recursive --quiet del $AWS_TARGET"
+  S3CMDLS="$PATH_S3CMD $S3_EXTRA_ARGS $S3_ACCESS ls $AWS_TARGET"
+  S3CMDDEL="$PATH_S3CMD $S3_EXTRA_ARGS $S3_ACCESS --recursive --quiet del $AWS_TARGET"
 
   EXISTING_BACKUPS=""
   # Loop through each object from S3 and get list of EXISTING_BACKUPS
@@ -69,7 +69,6 @@ function rotate() {
 }
 
 # S3 command parameters
-S3="/opt/s3cmd/s3cmd"
 S3_EXTRA_ARGS="--ssl"
 S3_ACCESS="--access_key=$AWS_WRITE_ACCESS_KEY --secret_key=$AWS_WRITE_SECRET_KEY"
 DATE="`date +%Y-%m-%d`"
