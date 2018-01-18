@@ -26,14 +26,20 @@ MYSQL="$(which mysql)"
 GZIP="$(which gzip)"
 
 # get a list of databases
-databases=`$MYSQL $MYSQLACCESS -e "SHOW DATABASES;" \
-  | tr -d "| " \
-  | grep -v "\(Database\|information_schema\|performance_schema\|mysql\|test\|sys\)"`
+DBCOUNT=`echo "$MYSQL_DBLIST" | wc -w`
+if [ $DBCOUNT -gt 0 ]; then
+  databases=$MYSQL_DBLIST
+else
+  # User must be able to run SHOW_DATABASES to get list of all databases
+  databases=`$MYSQL $MYSQL_ACCESS -e "SHOW DATABASES;" \
+    | tr -d "| " \
+    | grep -v "\(Database\|information_schema\|performance_schema\|mysql\|test\|sys\)"`
+fi
 
 DATE="`date +%Y-%m-%d_%H%M`"
 
 for db in $databases; do
   SQLGZ_NAME=$db"_$DATE.sql.gz"
-  $MYSQLDUMP $MYSQLACCESS --force --opt --databases "$db" | $GZIP -c > "$STAGING_DIR/$SQLGZ_NAME"
+  $MYSQLDUMP $MYSQL_ACCESS --force --opt --databases "$db" | $GZIP -c > "$STAGING_DIR/$SQLGZ_NAME"
 done
 
