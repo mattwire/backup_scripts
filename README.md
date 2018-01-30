@@ -66,5 +66,5 @@ rm -r s3cmd
 ```
 
 ## cPanel/WHM
-Copy helpers/postcpbackup to /usr/local/cpanel/bin/postcpbackup to automatically trigger after cpanel backups complete.
+Copy helpers/postcpbackup to /usr/local/cpanel/scripts/postcpbackup to automatically trigger after cpanel backups complete.
 
