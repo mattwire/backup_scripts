@@ -21,6 +21,11 @@ This is a simple helper script designed to help check that everything is configu
 ### dest_s3.sh
 This allows you to PUT or SYNC files/directories to an Amazon S3 bucket
 
+### dir_staging.sh
+This manages the staging directory.
+
+Specifically it creates the directory and allows it to be cleaned at the start or end (before rotate) of run.sh
+
 ### rotate_s3.sh
 This allows you to rotate one or more buckets on Amazon S3.
 
