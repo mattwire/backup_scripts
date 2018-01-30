@@ -1,0 +1,4 @@
+#!/bin/bash
+# Install this script to /usr/local/cpanel/bin to run after WHM backups complete
+
+/opt/backup/run.sh
