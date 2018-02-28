@@ -66,5 +66,8 @@ rm -r s3cmd
 ```
 
 ## cPanel/WHM
-Copy helpers/postcpbackup to /usr/local/cpanel/scripts/postcpbackup to automatically trigger after cpanel backups complete.
+We use the WHM backup system to create the backups and store them in `/backup/{yyyy-mm-dd}`. Then we use backup_scripts (specifically dest_s3.sh) to sync the contents of /backup up to an Amazon S3 bucket. Rotating backups is done via rotate_s3.sh on another server (but could be triggered from the cpanel server too).
 
+1. Enable the WHM backups to save to `/backup` with system and account backups. Daily, retention 3 days.
+1. Install backup_scripts to `/opt/backup` from https://github.com/mattwire/backup_scripts (and s3cmd to `/opt/s3cmd`).
+1. Copy postcpbackup from `/opt/backup/helpers/postcpbackup` to `/usr/local/cpanel/scripts/postcpbackup` to automatically trigger after cpanel backups complete.
