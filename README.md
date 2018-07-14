@@ -6,14 +6,44 @@ https://www.mjwconsult.co.uk
 ## Introduction
 This is a collection of scripts for automating host backups with the minimum of setup.
 
+If possible install:
+```
+apt-get install python-dateutil python-magic
+```
+
 ## Scripts
 ### backup_mysql.sh
 This script creates a dump of all (or a list of) databases from the local MYSQL server.
+
+To use this you need to configure a backup user that has permission to view all databases (or just a single database if you are only backing up one).
+
+To create a "backup" user (change the password before executing):
+```
+CREATE USER 'backup'@'%' ;
+UPDATE mysql.user SET Password=PASSWORD('backup') WHERE User='backup' AND Host='%' ;
+GRANT Show databases ON *.* TO 'backup'@'%' ;
+GRANT Select ON *.* TO 'backup'@'%' ;
+GRANT Show view ON *.* TO 'backup'@'%' ;
+GRANT Lock tables ON *.* TO 'backup'@'%' ;
+FLUSH PRIVILEGES;
+```
 
 ### backup_tar.sh
 This script creates a gzipped tar archive containing the contents as defined in tar.include and tar.exclude.
 
 The config files should contain one entry per line and may contain wildcards.
+
+For example /etc/backup/tar.include:
+```
+/etc
+/opt
+/home/pi
+```
+
+For example /etc/backup/tar.exclude:
+```
+/opt/vc
+```
 
 ### check_requirements.sh
 This is a simple helper script designed to help check that everything is configured correctly.
