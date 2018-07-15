@@ -11,6 +11,11 @@ If possible install:
 apt-get install python-dateutil python-magic
 ```
 
+Normally to install:
+```
+git clone https://github.com/mattwire/backup_scripts.git /opt/backup
+```
+
 ## Scripts
 ### backup_mysql.sh
 This script creates a dump of all (or a list of) databases from the local MYSQL server.
